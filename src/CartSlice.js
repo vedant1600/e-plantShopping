@@ -10,6 +10,7 @@ const cartSlice = createSlice({
   initialState,
 
   reducers: {
+    // Add a plant to the cart
     addToCart: (state, action) => {
       const existingItem = state.items.find(
         (item) => item.id === action.payload.id
@@ -25,12 +26,14 @@ const cartSlice = createSlice({
       }
     },
 
+    // Remove a plant completely from the cart
     removeFromCart: (state, action) => {
       state.items = state.items.filter(
         (item) => item.id !== action.payload
       );
     },
 
+    // Increase quantity
     increaseQuantity: (state, action) => {
       const item = state.items.find(
         (item) => item.id === action.payload
@@ -41,6 +44,7 @@ const cartSlice = createSlice({
       }
     },
 
+    // Decrease quantity
     decreaseQuantity: (state, action) => {
       const item = state.items.find(
         (item) => item.id === action.payload
@@ -57,12 +61,14 @@ const cartSlice = createSlice({
       }
     },
 
+    // Remove all items from cart
     clearCart: (state) => {
       state.items = [];
     },
   },
 });
 
+// Export actions
 export const {
   addToCart,
   removeFromCart,
@@ -71,4 +77,5 @@ export const {
   clearCart,
 } = cartSlice.actions;
 
+// Export reducer
 export default cartSlice.reducer;

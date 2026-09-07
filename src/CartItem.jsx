@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   increaseQuantity,
@@ -10,7 +10,33 @@ import {
 function CartItem({ item }) {
   const dispatch = useDispatch();
 
-  const totalCost = item.price * item.quantity;
+  const cartItems = useSelector((state) => state.cart.items);
+
+  // Calculate total cost of all items in the cart
+  const calculateTotalAmount = () => {
+    return cartItems.reduce(
+      (total, cartItem) =>
+        total + cartItem.price * cartItem.quantity,
+      0
+    );
+  };
+
+  // Calculate total cost for the current item
+  const calculateItemTotal = () => {
+    return item.price * item.quantity;
+  };
+
+  const handleIncrease = () => {
+    dispatch(increaseQuantity(item.id));
+  };
+
+  const handleDecrease = () => {
+    dispatch(decreaseQuantity(item.id));
+  };
+
+  const handleDelete = () => {
+    dispatch(removeFromCart(item.id));
+  };
 
   return (
     <div className="cart-item">
@@ -24,9 +50,7 @@ function CartItem({ item }) {
         </p>
 
         <div className="quantity-controls">
-          <button
-            onClick={() => dispatch(decreaseQuantity(item.id))}
-          >
+          <button onClick={handleDecrease}>
             −
           </button>
 
@@ -34,23 +58,30 @@ function CartItem({ item }) {
             {item.quantity}
           </span>
 
-          <button
-            onClick={() => dispatch(increaseQuantity(item.id))}
-          >
+          <button onClick={handleIncrease}>
             +
           </button>
         </div>
 
+        <p>
+          Quantity: <strong>{item.quantity}</strong>
+        </p>
+
         <p className="item-total">
-          Total: ${totalCost.toFixed(2)}
+          Item Total: ${calculateItemTotal().toFixed(2)}
         </p>
 
         <button
           className="delete-button"
-          onClick={() => dispatch(removeFromCart(item.id))}
+          onClick={handleDelete}
         >
           Delete
         </button>
+
+        {/* Total cart amount */}
+        <p className="grand-total">
+          Total Cart Amount: ${calculateTotalAmount().toFixed(2)}
+        </p>
       </div>
     </div>
   );
